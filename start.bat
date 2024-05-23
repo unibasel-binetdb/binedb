@@ -1,0 +1,1 @@
+docker-compose -f .\library-manager\docker-compose.yml up -d
