@@ -1,11 +1,14 @@
 @php
-
-    $valueAccessor = str_replace(['[', '][', ']'], ['.', '.', ''], $field['name']);
-    $contacts = isset($entry) ? data_get($entry, $valueAccessor) : [];
-
+	$contacts = array();
 	$functionId = NULL;
-	if (preg_match('/functions\[(\d+)\]\[contacts\]/', $field['name'], $matches))
-		$functionId = $value[intval($matches[1])]['id'];
+
+	if($row != NULL) {
+		if(array_key_exists('contacts', $row))
+			$contacts = $row['contacts'];
+
+		if(array_key_exists('id', $row))
+			$functionId = $row['id'];
+	}
 @endphp
 
 <label>{!! $field['label'] !!}</label>
