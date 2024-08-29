@@ -14,5 +14,5 @@ enum CatalogingLevel: string implements HasTranslations
     case Zero = 'Zero';
     case Twenty = 'Twenty';
     case Fifty = 'Fifty';
-    case Ninety = 'Ninety ';
+    case Ninety = 'Ninety';
 }
