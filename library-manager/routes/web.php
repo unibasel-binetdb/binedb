@@ -44,3 +44,6 @@ Route::get('/export/blade/personfunction', 'App\Http\Controllers\Admin\ExportCon
 
 Route::post('/export/contact', 'App\Http\Controllers\Admin\ExportController@exportContacts')->name('export.contact');
 Route::get('/export/blade/contact', 'App\Http\Controllers\Admin\ExportController@contactModal')->name('export.modal.contact');
+
+Route::post('/export/bulk', 'App\Http\Controllers\Admin\ExportController@exportBulk')->name('export.bulk');
+Route::get('/export/blade/bulk', 'App\Http\Controllers\Admin\ExportController@bulkModal')->name('export.modal.bulk');

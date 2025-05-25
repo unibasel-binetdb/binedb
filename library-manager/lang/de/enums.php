@@ -1,7 +1,9 @@
 <?php
+use App\Enums\Acquisition;
 use App\Enums\AssociatedType;
 use App\Enums\CatalogingLevel;
 use App\Enums\ContactTopic;
+use App\Enums\Digitization;
 use App\Enums\Education;
 use App\Enums\Faculty;
 use App\Enums\Institution;
@@ -10,6 +12,7 @@ use App\Enums\Occupation;
 use App\Enums\PrintDaemon;
 use App\Enums\Provider;
 use App\Enums\SignatureAssignmentType;
+use App\Enums\SlsKey;
 use App\Enums\SlspAgreement;
 use App\Enums\SlspCarrier;
 use App\Enums\SlspContact;
@@ -76,6 +79,20 @@ return [
         AssociatedType::Han->value => 'HAN',
         AssociatedType::Privat->value => 'Privat',
         AssociatedType::Hospital->value => 'Spital'
+    ],
+    'acquisition' => [
+        Acquisition::YesWithDigirech->value => 'Ja, mit Digirech',
+        Acquisition::YesWithoutDigirech->value => 'Ja, ohne Digirech',
+        Acquisition::No->value => 'Nein'
+    ],
+    'digitization' => [
+        Digitization::WithAlma->value => 'Digitalisierung mit Alma',
+        Digitization::WithMyBib->value => 'Digitalisierung mit MyBib',
+    ],
+    'sls_key' => [
+        SlsKey::YesUni->value => 'Ja, über Uni',
+        SlsKey::YesDirect->value => 'Ja, direkt',
+        SlsKey::No->value => 'Nein',
     ],
     'slsp_contact' => [
         SlspContact::Librarianship->value => 'Bibliothekarisches',

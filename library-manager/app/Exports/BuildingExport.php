@@ -9,9 +9,12 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDefaultStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 use Illuminate\Http\Request;
 
-class BuildingExport implements FromQuery, WithEvents, WithMapping, WithHeadings
+class BuildingExport implements FromQuery, WithEvents, WithMapping, WithHeadings, WithDefaultStyles, WithTitle
 {
     use ExcelColumnAutoSize;
 
@@ -85,6 +88,18 @@ class BuildingExport implements FromQuery, WithEvents, WithMapping, WithHeadings
             $building->workspace_comment,
             $building->space_comment
         ];
+    }
+
+    public function title(): string
+    {
+        return trans('export.buildingSheet');
+    }
+
+    public function defaultStyles(Style $defaultStyle)
+    {
+        return $defaultStyle->getAlignment()->setVertical(
+            \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP
+        );
     }
 
     public function registerEvents(): array

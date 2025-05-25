@@ -67,7 +67,7 @@ class LibraryRequest extends FormRequest
             'subject_idx_local' => 'nullable|string|max:3',
             'subject_idx_gnd' => 'nullable|string|max:16',
             'subject_idx_comment' => 'nullable|string',
-            'acquisition' => 'nullable|string|max:3',
+            'acquisition' => 'nullable|string|max:11',
             'acquisition_comment' => 'nullable|string',
             'magazine_management' => 'nullable|string|max:3',
             'magazine_management_comment' => 'nullable|string',

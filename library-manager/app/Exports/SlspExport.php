@@ -9,9 +9,12 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDefaultStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 use Illuminate\Http\Request;
 
-class SlspExport implements FromQuery, WithEvents, WithMapping, WithHeadings
+class SlspExport implements FromQuery, WithEvents, WithMapping, WithHeadings, WithDefaultStyles, WithTitle
 {
     use ExcelColumnAutoSize;
     
@@ -94,6 +97,18 @@ class SlspExport implements FromQuery, WithEvents, WithMapping, WithHeadings
             $slsp->fte_comment,
             $slsp->comment
         ];
+    }
+
+    public function title(): string
+    {
+        return trans('export.slspSheet');
+    }
+
+    public function defaultStyles(Style $defaultStyle)
+    {
+        return $defaultStyle->getAlignment()->setVertical(
+            \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP
+        );
     }
 
     public function registerEvents(): array

@@ -222,6 +222,7 @@ class PersonCrudController extends CrudController
         CRUD::field('training_acquisition')->type('checkbox')->label(trans('person.trainingAcquisition'))->size(3)->tab($personTab);
         CRUD::field('training_magazine')->type('checkbox')->label(trans('person.trainingMagazine'))->size(3)->tab($personTab);
         CRUD::field('training_lending')->type('checkbox')->label(trans('person.trainingLending'))->size(3)->tab($personTab);
+        CRUD::field('training_emedia')->type('checkbox')->label(trans('person.trainingEmedia'))->size(3)->tab($personTab);
 
         CRUD::field('eduesction')->type('new_section')->title(trans('person.educationTitle'))->tab($personTab);
         CRUD::field('education')->label(trans('person.education'))->type('enum')
@@ -233,6 +234,7 @@ class PersonCrudController extends CrudController
         CRUD::field('slsp_acq')->type('checkbox')->label(trans('person.slspAcq'))->size(3)->tab($personTab);
         CRUD::field('slsp_acq_plus')->type('checkbox')->label(trans('person.slspAcqPlus'))->size(3)->tab($personTab);
         CRUD::field('slsp_acq_certified')->type('checkbox')->label(trans('person.slspAcqCertified'))->size(3)->tab($personTab);
+        CRUD::field('digirech_share')->type('checkbox')->label(trans('person.digirechShare'))->size(3)->tab($personTab);
 
         CRUD::field('res_mngt_title')->type('new_section')->title(trans('person.resMngtTitle'))->tab($personTab);
         CRUD::field('slsp_cat')->type('checkbox')->label(trans('person.slspCat'))->size(3)->tab($personTab);

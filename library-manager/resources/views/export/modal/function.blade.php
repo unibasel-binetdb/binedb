@@ -1,9 +1,12 @@
 @php
 $yesNos = \App\Enums\YesNo::values();
 $yesNoAlma = \App\Enums\YesNoAlma::values();
+$acquisitions = \App\Enums\Acquisition::values();
 $subjectIndexings = \App\Enums\SubjectIndexing::values();
 $slspCarriers = \App\Enums\SlspCarrier::values();
 $printDaemons = \App\Enums\PrintDaemon::values();
+$digitizations = \App\Enums\Digitization::values();
+$slsKeys = \App\Enums\SlsKey::values();
 @endphp
 
 <div class="modal-header">
@@ -55,7 +58,7 @@ $printDaemons = \App\Enums\PrintDaemon::values();
                 <label for="acquisitionfilter" class="form-label">{{ trans('libraryFunction.acquisition') }}</label>
                 <select class="form-select" id="acquisitionfilter" name="acquisition">
                     <option value="" selected>{{ trans('general.all') }}</option>
-                    @foreach($yesNos as $value => $label)
+                    @foreach($acquisitions as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
                 </select>
@@ -74,6 +77,35 @@ $printDaemons = \App\Enums\PrintDaemon::values();
                 <select class="form-select" id="lendingfilter" name="lending">
                     <option value="" selected>{{ trans('general.all') }}</option>
                     @foreach($yesNoAlma as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <label for="emediafilter" class="form-label">{{ trans('libraryFunction.emedia') }}</label>
+                <select class="form-select" id="emediafilter" name="emedia">
+                    <option value="" selected>{{ trans('general.all') }}</option>
+                    @foreach($yesNos as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-4">
+                <label for="digitizationfilter" class="form-label">{{ trans('libraryFunction.digitization') }}</label>
+                <select class="form-select" id="digitizationfilter" name="digitization">
+                    <option value="" selected>{{ trans('general.all') }}</option>
+                    @foreach($digitizations as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-4">
+                <label for="slskeyfilter" class="form-label">{{ trans('libraryFunction.slsKey') }}</label>
+                <select class="form-select" id="slskeyfilter" name="slskey">
+                    <option value="" selected>{{ trans('general.all') }}</option>
+                    @foreach($slsKeys as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
                 </select>

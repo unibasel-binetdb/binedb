@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Acquisition;
 use App\Enums\AssociatedType;
+use App\Enums\Digitization;
 use App\Enums\Faculty;
 use App\Enums\Institution;
 use App\Enums\IzUsageCost;
 use App\Enums\PrintDaemon;
 use App\Enums\Provider;
 use App\Enums\SignatureAssignmentType;
+use App\Enums\SlsKey;
 use App\Enums\SlspAgreement;
 use App\Enums\SlspCarrier;
 use App\Enums\SlspCost;
@@ -432,15 +435,24 @@ class LibraryCrudController extends CrudController
             ->enum_function('translate')->enum_class(SubjectIndexing::class)->size(3)->tab($almaFunctionsTab);
         CRUD::field('function.subject_idx_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryFunction.subjectIdxComment'))->size(6)->tab($almaFunctionsTab);
         CRUD::field('function.acquisition')->label(trans('libraryFunction.acquisition'))->type('enum')
-            ->enum_function('translate')->enum_class(YesNo::class)->size(3)->tab($almaFunctionsTab);
+            ->enum_function('translate')->enum_class(Acquisition::class)->size(3)->tab($almaFunctionsTab);
         CRUD::field('function.acquisition_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryFunction.acquisitionComment'))->size(9)->tab($almaFunctionsTab);
         CRUD::field('function.magazine_management')->label(trans('libraryFunction.magazineManagement'))->type('enum')
             ->enum_function('translate')->enum_class(YesNo::class)->size(3)->tab($almaFunctionsTab);
         CRUD::field('function.magazine_management_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryFunction.magazineManagementComment'))->size(9)->tab($almaFunctionsTab);
+        CRUD::field('function.emedia')->label(trans('libraryFunction.emedia'))->type('enum')
+            ->enum_function('translate')->enum_class(YesNo::class)->size(3)->tab($almaFunctionsTab);
+        CRUD::field('function.emedia_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryFunction.emediaComment'))->size(9)->tab($almaFunctionsTab);
         CRUD::field('function.lending_title')->type('new_section')->title(trans('libraryFunction.lendingTitle'))->tab($almaFunctionsTab);
         CRUD::field('function.lending')->label(trans('libraryFunction.lending'))->type('enum')
             ->enum_function('translate')->enum_class(YesNoAlma::class)->size(3)->tab($almaFunctionsTab);
         CRUD::field('function.lending_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryFunction.lendingComment'))->size(9)->tab($almaFunctionsTab);
+        CRUD::field('function.digitization')->label(trans('libraryFunction.digitization'))->type('enum')
+            ->enum_function('translate')->enum_class(Digitization::class)->size(3)->tab($almaFunctionsTab);
+        CRUD::field('function.digitization_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryFunction.digitizationComment'))->size(9)->tab($almaFunctionsTab);
+        CRUD::field('function.sls_key')->label(trans('libraryFunction.slsKey'))->type('enum')
+            ->enum_function('translate')->enum_class(SlsKey::class)->size(3)->tab($almaFunctionsTab);
+        CRUD::field('function.sls_key_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryFunction.slsKeyComment'))->size(9)->tab($almaFunctionsTab);
         CRUD::field('function.self_lending')->label(trans('libraryFunction.selfLending'))->type('enum')
             ->enum_function('translate')->enum_class(YesNo::class)->size(3)->tab($almaFunctionsTab);
         CRUD::field('function.self_lending_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryFunction.selfLendingComment'))->size(9)->tab($almaFunctionsTab);
@@ -465,6 +477,7 @@ class LibraryCrudController extends CrudController
         CRUD::field('catalog.is_072')->type('checkbox')->label(trans('libraryCatalog.is072'))->size(3)->tab($catalogingTab);
         CRUD::field('catalog.is_082')->type('checkbox')->label(trans('libraryCatalog.is082'))->size(3)->tab($catalogingTab);
         CRUD::field('catalog.is_084')->type('checkbox')->label(trans('libraryCatalog.is084'))->size(3)->tab($catalogingTab);
+        CRUD::field('catalog.catalog_comment')->type("textarea")->attributes(['rows' => 5])->label(trans('libraryCatalog.catalogComment'))->size(12)->tab($catalogingTab);
 
         CRUD::field([
             'name' => 'catalog.nz_fields',

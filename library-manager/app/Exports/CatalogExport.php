@@ -9,9 +9,12 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDefaultStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 use Illuminate\Http\Request;
 
-class CatalogExport implements FromQuery, WithEvents, WithMapping, WithHeadings
+class CatalogExport implements FromQuery, WithEvents, WithMapping, WithHeadings, WithDefaultStyles, WithTitle
 {
     use ExcelColumnAutoSize;
 
@@ -70,6 +73,7 @@ class CatalogExport implements FromQuery, WithEvents, WithMapping, WithHeadings
             trans('libraryCatalog.is072'),
             trans('libraryCatalog.is082'),
             trans('libraryCatalog.is084'),
+            trans('libraryCatalog.fields.comment'),
             'Feld Typ',
             trans('libraryCatalog.fields.field'),
             trans('libraryCatalog.fields.subfield'),
@@ -90,6 +94,7 @@ class CatalogExport implements FromQuery, WithEvents, WithMapping, WithHeadings
                     $catalog->library->bibcode,
                     $catalog->library->name,
                     $catalog->library->is_active ? trans('general.yes') : trans('general.no'),
+                    "",
                     "",
                     "",
                     "",
@@ -115,6 +120,7 @@ class CatalogExport implements FromQuery, WithEvents, WithMapping, WithHeadings
                     "",
                     "",
                     "",
+                    "",
                     'IZ',
                     array_key_exists('field', $izField) ? $izField['field'] : "",
                     array_key_exists('subfield', $izField) ? $izField['subfield'] : "",
@@ -135,6 +141,7 @@ class CatalogExport implements FromQuery, WithEvents, WithMapping, WithHeadings
             $catalog->is_072 ? trans('general.yes') : trans('general.no'),
             $catalog->is_082 ? trans('general.yes') : trans('general.no'),
             $catalog->is_084 ? trans('general.yes') : trans('general.no'),
+            $catalog->catalog_comment,
             'Katalogisier-Info',
             "",
             "",
@@ -145,6 +152,18 @@ class CatalogExport implements FromQuery, WithEvents, WithMapping, WithHeadings
         ];
 
         return $mapped;
+    }
+
+    public function title(): string
+    {
+        return trans('export.catalogSheet');
+    }
+
+    public function defaultStyles(Style $defaultStyle)
+    {
+        return $defaultStyle->getAlignment()->setVertical(
+            \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP
+        );
     }
 
     public function registerEvents(): array

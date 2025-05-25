@@ -10,12 +10,15 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDefaultStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 use Illuminate\Http\Request;
 
-class ContactExport implements FromGenerator, WithEvents, WithMapping, WithHeadings
+class ContactExport implements FromGenerator, WithEvents, WithMapping, WithHeadings, WithDefaultStyles, WithTitle
 {
     use ExcelColumnAutoSize;
-    
+
     private $onlyActive = NULL;
     private $onlyExited = NULL;
     private $topic = NULL;
@@ -50,12 +53,11 @@ class ContactExport implements FromGenerator, WithEvents, WithMapping, WithHeadi
         if ($this->topic !== NULL)
             $qry->where('topic', $this->topic);
 
-        $mapped = $qry->get()->sortBy(function($s)
-        {
+        $mapped = $qry->get()->sortBy(function ($s) {
             return $s->personFunction->person->last_name;
         });
 
-        foreach($mapped as $m)
+        foreach ($mapped as $m)
             yield $m;
     }
 
@@ -122,8 +124,20 @@ class ContactExport implements FromGenerator, WithEvents, WithMapping, WithHeadi
             $contact->personFunction->work?->translate(),
             $contact->topic?->translate(),
             $contact->comment
-           
+
         ];
+    }
+
+    public function title(): string
+    {
+        return trans('export.contactSheet');
+    }
+
+    public function defaultStyles(Style $defaultStyle)
+    {
+        return $defaultStyle->getAlignment()->setVertical(
+            \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP
+        );
     }
 
     public function registerEvents(): array

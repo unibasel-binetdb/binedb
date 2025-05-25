@@ -44,6 +44,12 @@ function ExportModal($element) {
                     data[$el.attr('name')] = val;
             });
 
+            self.element.find('.form .form-check-input').each(function (i, e) {
+                var $el = $(e);
+                if($el.is(':checked'))
+                    data[$el.attr('name')] = '1';
+            });
+
             self.export(endpoint, data).then(function() {
                 new Noty({
                     type: "success",

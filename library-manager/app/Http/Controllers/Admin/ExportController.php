@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\BuildingExport;
+use App\Exports\BulkExport;
 use App\Exports\CatalogExport;
 use App\Exports\CollectionExport;
 use App\Exports\ContactExport;
@@ -20,6 +21,16 @@ class ExportController extends Controller
     public function index()
     {
         return view('export.index');
+    }
+
+    public function exportBulk(Request $request)
+    {
+        return Excel::download((new BulkExport)->filter($request), trans('export.bulkExport').'.xlsx');
+    }
+
+    public function bulkModal()
+    {
+        return view('export.modal.bulk');
     }
 
     public function exportLibraries(Request $request)

@@ -9,12 +9,15 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDefaultStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 use Illuminate\Http\Request;
 
-class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings
+class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings, WithDefaultStyles, WithTitle
 {
     use ExcelColumnAutoSize;
-    
+
     private $onlyActive = NULL;
     private $associatedType = NULL;
     private $stateType = NULL;
@@ -75,7 +78,7 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
             'libraries.id as library_id',
             'people.last_name',
             'libraries.bibcode'
-        ]);        
+        ]);
 
         $qry->join('people', 'people.id', '=', 'person_functions.person_id')
             ->join('libraries', 'libraries.id', '=', 'person_functions.library_id');
@@ -156,7 +159,9 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
             trans('personFunction.emailList'),
             trans('personFunction.institution'),
             trans('personFunction.personalLogin'),
+            trans('personFunction.personalLoginComment'),
             trans('personFunction.impersonalLogin'),
+            trans('personFunction.impersonalLoginComment'),
             trans('personFunction.slspContact'),
             trans('personFunction.functionComment'),
             trans('person.training'),
@@ -165,10 +170,12 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
             trans('person.trainingAcquisition'),
             trans('person.trainingMagazine'),
             trans('person.trainingLending'),
+            trans('person.trainingEmedia'),
             trans('person.education'),
             trans('person.slspAcq'),
             trans('person.slspAcqPlus'),
             trans('person.slspAcqCertified'),
+            trans('person.digirechShare'),
             trans('person.slspCat'),
             trans('person.slspCatPlus'),
             trans('person.slspCatCertified'),
@@ -208,7 +215,7 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
             $function->person->seal,
             $function->person->comment,
             $function->library->bibcode,
-            $function->library->is_active ? trans('library.isActive') : trans('library.isInactive'), 
+            $function->library->is_active ? trans('library.isActive') : trans('library.isInactive'),
             $function->library->name,
             $function->library->associated_type?->translate(),
             $function->library->state_type?->translate(),
@@ -224,7 +231,9 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
             $function->email_list ? trans('general.yes') : trans('general.no'),
             $function->institution?->translate(),
             $function->personal_login ? trans('general.yes') : trans('general.no'),
+            $function->personal_login_comment,
             $function->impersonal_login ? trans('general.yes') : trans('general.no'),
+            $function->impersonal_login_comment,
             $function->slsp_contact?->translate(),
             $function->function_comment,
             $function->person->training?->translate(),
@@ -233,10 +242,12 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
             $function->person->training_acquisition ? trans('general.yes') : trans('general.no'),
             $function->person->training_magazine ? trans('general.yes') : trans('general.no'),
             $function->person->training_lending ? trans('general.yes') : trans('general.no'),
+            $function->person->training_emedia ? trans('general.yes') : trans('general.no'),
             $function->person->education?->translate(),
             $function->person->slsp_acq ? trans('general.yes') : trans('general.no'),
             $function->person->slsp_acq_plus ? trans('general.yes') : trans('general.no'),
             $function->person->slsp_acq_certified ? trans('general.yes') : trans('general.no'),
+            $function->person->digirech_share ? trans('general.yes') : trans('general.no'),
             $function->person->slsp_cat ? trans('general.yes') : trans('general.no'),
             $function->person->slsp_cat_plus ? trans('general.yes') : trans('general.no'),
             $function->person->slsp_cat_certified ? trans('general.yes') : trans('general.no'),
@@ -265,6 +276,18 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
             $function->person->edoc_bibliographic ? trans('general.yes') : trans('general.no'),
             $function->person->edoc_comment
         ];
+    }
+
+    public function title(): string
+    {
+        return trans('export.personFunctionSheet');
+    }
+
+    public function defaultStyles(Style $defaultStyle)
+    {
+        return $defaultStyle->getAlignment()->setVertical(
+            \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP
+        );
     }
 
     public function registerEvents(): array

@@ -40,31 +40,41 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div> 
-@endsection
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h3>{{ trans('export.bulkTitle') }}</h3>
+                    <p>{{ trans('export.bulkLead') }}</p>
 
-@section('before_scripts')
- <div id="exportModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"></h5>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="exportbtn">Export</button>
+                    <div class="exports">
+                        <a href="#" data-blade="{{ route("export.modal.bulk") }}" class="export-link d-block py-1">{{ trans('export.bulkExport') }}</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endsection
+
+@section('before_scripts')
+    <div id="exportModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="exportbtn">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('after_scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var exportModal = new ExportModal($('#exportModal'));
 
-            $('.export-link').click(function() {
+            $('.export-link').click(function () {
                 exportModal.open($(this).data('blade'));
             });
         });

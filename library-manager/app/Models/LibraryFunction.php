@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\Acquisition;
+use App\Enums\Digitization;
 use App\Enums\PrintDaemon;
+use App\Enums\SlsKey;
 use App\Enums\SlspCarrier;
 use App\Enums\SubjectIndexing;
 use App\Enums\YesNo;
@@ -30,6 +33,12 @@ class LibraryFunction extends Model
         'subject_idx_comment',
         'acquisition',
         'acquisition_comment',
+        'digitization',
+        'digitization_comment',
+        'sls_key',
+        'sls_key_comment',
+        'emedia',
+        'emedia_comment',
         'magazine_management',
         'magazine_management_comment',
         'lending',
@@ -57,7 +66,10 @@ class LibraryFunction extends Model
         'cataloging' => YesNo::class,
         'subject_idx_local' => YesNo::class,
         'subject_idx_gnd' => SubjectIndexing::class,
-        'acquisition' => YesNo::class,
+        'acquisition' => Acquisition::class,
+        'sls_key' => SlsKey::class,
+        'emedia' => YesNo::class,
+        'digitization' => Digitization::class,
         'magazine_management' => YesNo::class,
         'lending' => YesNoAlma::class,
         'self_lending' => YesNo::class,

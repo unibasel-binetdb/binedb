@@ -9,17 +9,23 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDefaultStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 use Illuminate\Http\Request;
 
-class FunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings
+class FunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings, WithDefaultStyles, WithTitle
 {
     use ExcelColumnAutoSize;
-    
+
     private $onlyActive = NULL;
     private $cataloging = NULL;
     private $subjectIdxLocal = NULL;
     private $subjectIdxGnd = NULL;
     private $acquisition = NULL;
+    private $emedia = NULL;
+    private $slsKey = NULL;
+    private $digitization = NULL;
     private $magazineManagement = NULL;
     private $lending = NULL;
     private $selfLending = NULL;
@@ -39,6 +45,9 @@ class FunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings
         $this->subjectIdxLocal = $request->input('subject_idx_local');
         $this->subjectIdxGnd = $request->input('subject_idx_gnd');
         $this->acquisition = $request->input('acquisition');
+        $this->emedia = $request->input('emedia');
+        $this->slsKey = $request->input('sls_key');
+        $this->digitization = $request->input('digitization');
         $this->magazineManagement = $request->input('magazine_management');
         $this->lending = $request->input('lending');
         $this->selfLending = $request->input('self_lending');
@@ -58,7 +67,7 @@ class FunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings
 
         if ($this->onlyActive !== NULL)
             $qry->where('libraries.is_active', $this->onlyActive);
-        
+
         if ($this->cataloging !== NULL)
             $qry->where('cataloging', $this->cataloging);
 
@@ -70,6 +79,15 @@ class FunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings
 
         if ($this->acquisition !== NULL)
             $qry->where('acquisition', $this->acquisition);
+
+        if ($this->emedia !== NULL)
+            $qry->where('emedia', $this->emedia);
+
+        if ($this->slsKey !== NULL)
+            $qry->where('slsKey', $this->slsKey);
+
+        if ($this->digitization !== NULL)
+            $qry->where('digitization', $this->digitization);
 
         if ($this->magazineManagement !== NULL)
             $qry->where('magazine_management', $this->magazineManagement);
@@ -111,10 +129,16 @@ class FunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings
             trans('libraryFunction.subjectIdxComment'),
             trans('libraryFunction.acquisition'),
             trans('libraryFunction.acquisitionComment'),
+            trans('libraryFunction.emedia'),
+            trans('libraryFunction.emediaComment'),
             trans('libraryFunction.magazineManagement'),
             trans('libraryFunction.magazineManagementComment'),
             trans('libraryFunction.lending'),
             trans('libraryFunction.lendingComment'),
+            trans('libraryFunction.digitization'),
+            trans('libraryFunction.digitizationComment'),
+            trans('libraryFunction.slsKey'),
+            trans('libraryFunction.slsKeyComment'),
             trans('libraryFunction.selfLending'),
             trans('libraryFunction.selfLendingComment'),
             trans('libraryFunction.baselCarrier'),
@@ -143,10 +167,16 @@ class FunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings
             $function->subject_idx_comment,
             $function->acquisition?->translate(),
             $function->acquisition_comment,
+            $function->emedia?->translate(),
+            $function->emedia_comment,
             $function->magazine_management?->translate(),
             $function->magazine_management_comment,
             $function->lending?->translate(),
             $function->lending_comment,
+            $function->digitization?->translate(),
+            $function->digitization_comment,
+            $function->sls_key?->translate(),
+            $function->sls_key_comment,
             $function->self_lending?->translate(),
             $function->self_lending_comment,
             $function->basel_carrier?->translate(),
@@ -160,6 +190,18 @@ class FunctionExport implements FromQuery, WithEvents, WithMapping, WithHeadings
             $function->print_daemon?->translate(),
             $function->print_daemon_comment
         ];
+    }
+
+    public function title(): string
+    {
+        return trans('export.functionSheet');
+    }
+
+    public function defaultStyles(Style $defaultStyle)
+    {
+        return $defaultStyle->getAlignment()->setVertical(
+            \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP
+        );
     }
 
     public function registerEvents(): array

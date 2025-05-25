@@ -14,12 +14,15 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithDefaultStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 use Illuminate\Http\Request;
 
-class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHeadings
+class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHeadings, WithDefaultStyles, WithTitle
 {
     use ExcelColumnAutoSize;
-    
+
     private $onlyActive = NULL;
     private $usageUnit = NULL;
 
@@ -28,7 +31,7 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
         $onlyActive = $request->input('active');
         if ($onlyActive !== NULL)
             $this->onlyActive = $onlyActive == "1";
-        
+
         $this->usageUnit = $request->input('usage_unit');
 
         return $this;
@@ -42,24 +45,24 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
 
         if ($this->onlyActive !== NULL)
             $locQry = $locQry->where('libraries.is_active', $this->onlyActive);
-        
+
         if ($this->usageUnit !== NULL)
             $locQry = $locQry->where('usage_unit', $this->usageUnit);
-        
+
         $locations = $locQry->get();
 
-        foreach($locations as $m) {
+        foreach ($locations as $m) {
             $generated[] = [
                 'type' => trans('location.singular'),
                 'bibcode' => $m->library->bibcode,
                 'lib_name' => $m->library->name,
                 'lib_active' => $m->library->is_active,
-                'code' =>  $m->code,
-                'name' =>  $m->loc_name,
+                'code' => $m->code,
+                'name' => $m->loc_name,
                 'example_rule' => $m->example_rule,
-                'usage_unit' =>  $m->usage_unit?->translate(),
-                'comment' =>  $m->comment
-           ];
+                'usage_unit' => $m->usage_unit?->translate(),
+                'comment' => $m->comment
+            ];
         }
 
         $deskQry = Desk::query();
@@ -70,15 +73,15 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
 
         $desks = $deskQry->get();
 
-        foreach($desks as $m) {
+        foreach ($desks as $m) {
             $generated[] = [
                 'type' => trans('desk.singular'),
                 'bibcode' => $m->library->bibcode,
                 'lib_name' => $m->library->name,
                 'lib_active' => $m->library->is_active,
-                'code' =>  $m->code,
-                'name' =>  $m->name,
-                'comment' =>  $m->comment
+                'code' => $m->code,
+                'name' => $m->name,
+                'comment' => $m->comment
             ];
         }
 
@@ -90,14 +93,14 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
 
         $signatureSpans = $spanQry->get();
 
-        foreach($signatureSpans as $m) {
+        foreach ($signatureSpans as $m) {
             $generated[] = [
-                'type' => trans('library.signatureTitle') . ' '. trans('signature.signatureSpan'),
+                'type' => trans('library.signatureTitle') . ' ' . trans('signature.signatureSpan'),
                 'bibcode' => $m->library->bibcode,
                 'lib_name' => $m->library->name,
                 'lib_active' => $m->library->is_active,
                 'span' => $m->span,
-                'comment' =>  $m->comment
+                'comment' => $m->comment
             ];
         }
 
@@ -109,24 +112,24 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
 
         $signatureAssignments = $assignQry->get();
 
-        foreach($signatureAssignments as $m) {
+        foreach ($signatureAssignments as $m) {
             $generated[] = [
-                'type' => trans('library.signatureTitle') . ' '. trans('signature.signatureAssignment'),
+                'type' => trans('library.signatureTitle') . ' ' . trans('signature.signatureAssignment'),
                 'bibcode' => $m->library->bibcode,
                 'lib_name' => $m->library->name,
                 'lib_active' => $m->library->is_active,
                 'assignment' => $m->assignment?->translate(),
-                'comment' =>  $m->comment
+                'comment' => $m->comment
             ];
         }
 
         $libraryQuery = Library::query();
         $libraries = $libraryQuery->get();
 
-        foreach($libraries as $m) {
-            if($this->isNullOrEmptyString($m->storage) && $this->isNullOrEmptyString($m->location_comment) && $m->sticker == NULL) {
-                    continue;
-                }
+        foreach ($libraries as $m) {
+            if ($this->isNullOrEmptyString($m->storage) && $this->isNullOrEmptyString($m->location_comment) && $m->sticker == NULL) {
+                continue;
+            }
 
             $generated[] = [
                 'type' => 'Etiketten',
@@ -135,15 +138,15 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
                 'lib_active' => $m->is_active,
                 'storage' => $m->storage,
                 'sticker' => $m->sticker?->translate(),
-                'location_comment' =>  $m->location_comment
+                'location_comment' => $m->location_comment
             ];
         }
-        
-        usort($generated, function($a, $b) {
+
+        usort($generated, function ($a, $b) {
             return strcmp($a['bibcode'], $b['bibcode']);
         });
 
-        foreach($generated as $g)
+        foreach ($generated as $g)
             yield $g;
     }
 
@@ -187,6 +190,18 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
         ];
     }
 
+    public function title(): string
+    {
+        return trans('export.collectionSheet');
+    }
+
+    public function defaultStyles(Style $defaultStyle)
+    {
+        return $defaultStyle->getAlignment()->setVertical(
+            \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP
+        );
+    }
+
     public function registerEvents(): array
     {
         return [
@@ -196,7 +211,8 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
         ];
     }
 
-    private function isNullOrEmptyString($str) {
+    private function isNullOrEmptyString($str)
+    {
         return ($str === null || trim($str) === '');
     }
 }

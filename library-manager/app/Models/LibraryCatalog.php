@@ -23,6 +23,7 @@ class LibraryCatalog extends Model
         'is_084',
         'nz_fields',
         'iz_fields',
+        'catalog_comment',
         'comment'
     ];
 
