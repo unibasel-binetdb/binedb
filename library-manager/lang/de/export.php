@@ -2,7 +2,7 @@
 
 return [
     'title' => 'Exports',
-    'lead' => 'Dateiexporte genertieren',
+    'lead' => 'Dateiexporte generieren',
     'libraryTitle' => 'Bibliothek',
     'libraryLead' => 'Hier können alle Bibliothek bezogenen Daten heruntergeladen werden.',
     'libraryExport' => 'Bibliothek Grundtabelle',
@@ -43,5 +43,6 @@ return [
     'inactive' => 'Inaktiv',
     'bulkTitle' => 'Bulk Export',
     'bulkLead' => 'Kombinierter Excel export aller Grundtabellen.',
-    'bulkExport' => 'Export'
+    'bulkExport' => 'Export',
+    'exportFailed' => 'Export konnte nicht erstellt werden'
 ];

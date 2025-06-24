@@ -18,6 +18,7 @@ class SlspExport implements FromQuery, WithEvents, WithMapping, WithHeadings, Wi
 {
     use ExcelColumnAutoSize;
     
+    private ?int $onlyLibraryId = NULL;
     private $onlyActive = NULL;
     private $status = NULL;
     private $cost = NULL;
@@ -38,10 +39,19 @@ class SlspExport implements FromQuery, WithEvents, WithMapping, WithHeadings, Wi
         return $this;
     }
 
+    public function forLibrary($libraryId): self {
+        $this->onlyLibraryId = $libraryId;
+
+        return $this;
+    }
+
     public function query()
     {
         $qry = LibrarySlsp::query();
         $qry->join('libraries', 'library_slsps.library_id', '=', 'libraries.id');
+
+        if($this->onlyLibraryId !== NULL)
+            $qry->where('libraries.id', $this->onlyLibraryId);
 
         if ($this->onlyActive !== NULL)
             $qry->where('libraries.is_active', $this->onlyActive);

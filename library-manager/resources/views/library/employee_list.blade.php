@@ -1,5 +1,4 @@
 @php
-
     $functions = $entry != null ? $entry->functions->sortBy('person.last_name') : collect();
     if(isset($field['institution'])) {
         $functions = $functions->filter(function($f) use ($field) {

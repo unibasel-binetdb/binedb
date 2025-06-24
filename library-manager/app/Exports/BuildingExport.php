@@ -18,6 +18,7 @@ class BuildingExport implements FromQuery, WithEvents, WithMapping, WithHeadings
 {
     use ExcelColumnAutoSize;
 
+    private ?int $onlyLibraryId = NULL;
     private $onlyActive = NULL;
     private $onlyKey = NULL;
 
@@ -34,10 +35,19 @@ class BuildingExport implements FromQuery, WithEvents, WithMapping, WithHeadings
         return $this;
     }
 
+    public function forLibrary($libraryId): self {
+        $this->onlyLibraryId = $libraryId;
+
+        return $this;
+    }
+
     public function query()
     {
         $qry = LibraryBuilding::query();
         $qry->join('libraries', 'library_buildings.library_id', '=', 'libraries.id');
+
+        if($this->onlyLibraryId !== NULL)
+            $qry->where('libraries.id', $this->onlyLibraryId);
 
         if ($this->onlyActive !== NULL)
             $qry->where('libraries.is_active', $this->onlyActive);

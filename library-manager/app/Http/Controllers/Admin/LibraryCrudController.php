@@ -23,6 +23,9 @@ use App\Enums\UsageUnit;
 use App\Enums\YesNo;
 use App\Enums\YesNoAlma;
 use App\Http\Requests\LibraryRequest;
+use App\Exports\BulkExport;
+use Backpack\CRUD\app\Library\Widget;
+use Maatwebsite\Excel\Facades\Excel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -57,11 +60,17 @@ class LibraryCrudController extends CrudController
         CRUD::setModel(\App\Models\Library::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/library');
         CRUD::setEntityNameStrings(trans('library.singular'), trans('library.plural'));
+
+        Widget::add()->type('script')->stack('after_scripts')->content(base_path('resources/js/export/exportModal.js'));
+        CRUD::addButtonFromView('line', 'export', 'export', 'end');
+    }
+
+    public function export() {
+        return Excel::download((new BulkExport)->forLibrary(157), trans('export.bulkExport').'.xlsx');
     }
 
     protected function fetchSearch()
     {
-
         return $this->fetch([
             'model' => \App\Models\Library::class,
             'searchable_attributes' => ['name', 'bibcode'],

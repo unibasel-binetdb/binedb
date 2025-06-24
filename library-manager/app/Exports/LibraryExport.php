@@ -18,13 +18,13 @@ class LibraryExport implements FromQuery, WithEvents, WithMapping, WithHeadings,
 {
     use ExcelColumnAutoSize;
 
+    private ?int $onlyLibraryId = NULL;
     private $onlyActive = NULL;
     private $onlyIzLibrary = NULL;
     private $associatedType = NULL;
     private $faculty = NULL;
     private $itProvider = NULL;
     private $stateType = NULL;
-
 
     public function filter(Request $request)
     {
@@ -43,10 +43,18 @@ class LibraryExport implements FromQuery, WithEvents, WithMapping, WithHeadings,
 
         return $this;
     }
+    public function forLibrary($libraryId): self {
+        $this->onlyLibraryId = $libraryId;
+
+        return $this;
+    }
 
     public function query()
     {
         $qry = Library::query();
+
+        if($this->onlyLibraryId !== NULL)
+            $qry->where('id', $this->onlyLibraryId);
 
         if ($this->onlyActive !== NULL)
             $qry->where('is_active', $this->onlyActive);

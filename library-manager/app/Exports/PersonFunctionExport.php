@@ -18,6 +18,7 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
 {
     use ExcelColumnAutoSize;
 
+    private ?int $onlyLibraryId = NULL;
     private $onlyActive = NULL;
     private $associatedType = NULL;
     private $stateType = NULL;
@@ -68,6 +69,12 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
         return $this;
     }
 
+    public function forLibrary($libraryId): self {
+        $this->onlyLibraryId = $libraryId;
+
+        return $this;
+    }
+
     public function query()
     {
         $qry = PersonFunction::query();
@@ -82,6 +89,9 @@ class PersonFunctionExport implements FromQuery, WithEvents, WithMapping, WithHe
 
         $qry->join('people', 'people.id', '=', 'person_functions.person_id')
             ->join('libraries', 'libraries.id', '=', 'person_functions.library_id');
+
+        if($this->onlyLibraryId !== NULL)
+            $qry->where('libraries.id', $this->onlyLibraryId);
 
         if ($this->onlyActive !== NULL)
             $qry->where('libraries.is_active', $this->onlyActive);

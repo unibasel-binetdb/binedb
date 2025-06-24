@@ -19,6 +19,7 @@ class ContactExport implements FromGenerator, WithEvents, WithMapping, WithHeadi
 {
     use ExcelColumnAutoSize;
 
+    private ?int $onlyLibraryId = NULL;
     private $onlyActive = NULL;
     private $onlyExited = NULL;
     private $topic = NULL;
@@ -38,11 +39,20 @@ class ContactExport implements FromGenerator, WithEvents, WithMapping, WithHeadi
         return $this;
     }
 
+    public function forLibrary($libraryId): self {
+        $this->onlyLibraryId = $libraryId;
+
+        return $this;
+    }
+
     public function generator(): Generator
     {
         $qry = Contact::query();
         $qry->join('person_functions', 'person_functions.id', '=', 'contacts.person_function_id');
         $qry->join('libraries', 'libraries.id', '=', 'person_functions.library_id');
+
+        if($this->onlyLibraryId !== NULL)
+            $qry->where('libraries.id', $this->onlyLibraryId);
 
         if ($this->onlyActive !== NULL)
             $qry->where('libraries.is_active', $this->onlyActive);

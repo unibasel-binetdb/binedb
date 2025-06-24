@@ -23,6 +23,7 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
 {
     use ExcelColumnAutoSize;
 
+    private ?int $onlyLibraryId = NULL;
     private $onlyActive = NULL;
     private $usageUnit = NULL;
 
@@ -36,12 +37,21 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
 
         return $this;
     }
+    public function forLibrary($libraryId): self
+    {
+        $this->onlyLibraryId = $libraryId;
+
+        return $this;
+    }
 
     public function generator(): Generator
     {
         $generated = [];
         $locQry = Location::query();
         $locQry = $locQry->join('libraries', 'locations.library_id', '=', 'libraries.id');
+
+        if ($this->onlyLibraryId !== NULL)
+            $locQry = $locQry->where('libraries.id', $this->onlyLibraryId);
 
         if ($this->onlyActive !== NULL)
             $locQry = $locQry->where('libraries.is_active', $this->onlyActive);
@@ -68,6 +78,9 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
         $deskQry = Desk::query();
         $deskQry = $deskQry->join('libraries', 'desks.library_id', '=', 'libraries.id');
 
+        if ($this->onlyLibraryId !== NULL)
+            $deskQry = $deskQry->where('libraries.id', $this->onlyLibraryId);
+
         if ($this->onlyActive !== NULL)
             $deskQry = $deskQry->where('libraries.is_active', $this->onlyActive);
 
@@ -88,6 +101,9 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
         $spanQry = SignatureSpan::query();
         $spanQry = $spanQry->join('libraries', 'signature_spans.library_id', '=', 'libraries.id');
 
+        if ($this->onlyLibraryId !== NULL)
+            $spanQry = $spanQry->where('libraries.id', $this->onlyLibraryId);
+
         if ($this->onlyActive !== NULL)
             $spanQry = $spanQry->where('libraries.is_active', $this->onlyActive);
 
@@ -107,6 +123,9 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
         $assignQry = SignatureAssignment::query();
         $assignQry = $assignQry->join('libraries', 'signature_assignments.library_id', '=', 'libraries.id');
 
+        if ($this->onlyLibraryId !== NULL)
+            $assignQry = $assignQry->where('libraries.id', $this->onlyLibraryId);
+
         if ($this->onlyActive !== NULL)
             $assignQry = $assignQry->where('libraries.is_active', $this->onlyActive);
 
@@ -124,6 +143,9 @@ class CollectionExport implements FromGenerator, WithEvents, WithMapping, WithHe
         }
 
         $libraryQuery = Library::query();
+        if ($this->onlyLibraryId !== NULL)
+            $libraryQuery = $libraryQuery->where('id', $this->onlyLibraryId);
+
         $libraries = $libraryQuery->get();
 
         foreach ($libraries as $m) {

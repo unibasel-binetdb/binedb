@@ -233,7 +233,7 @@ class PersonCrudController extends CrudController
         CRUD::field('acquisition_title')->type('new_section')->title(trans('person.acquisitionTitle'))->tab($personTab);
         CRUD::field('slsp_acq')->type('checkbox')->label(trans('person.slspAcq'))->size(3)->tab($personTab);
         CRUD::field('slsp_acq_plus')->type('checkbox')->label(trans('person.slspAcqPlus'))->size(3)->tab($personTab);
-        CRUD::field('slsp_acq_certified')->type('checkbox')->label(trans('person.slspAcqCertified'))->size(3)->tab($personTab);
+        CRUD::field('slsp_acq_certified')->type('checkbox')->label(trans('person.slspAcqCertified'))->size(6)->tab($personTab);
         CRUD::field('digirech_share')->type('checkbox')->label(trans('person.digirechShare'))->size(3)->tab($personTab);
 
         CRUD::field('res_mngt_title')->type('new_section')->title(trans('person.resMngtTitle'))->tab($personTab);
