@@ -65,8 +65,16 @@ class LibraryCrudController extends CrudController
         CRUD::addButtonFromView('line', 'export', 'export', 'end');
     }
 
-    public function export() {
-        return Excel::download((new BulkExport)->forLibrary(157), trans('export.bulkExport').'.xlsx');
+    public function export(int $id)
+    {
+        if ($id == null)
+            return abort(404);
+
+        $entry = $this->crud->model::findOrFail($id);
+        if ($entry == null)
+            return abort(404);
+
+        return Excel::download((new BulkExport)->forLibrary($id), trans('export.bulkExport') . '.xlsx');
     }
 
     protected function fetchSearch()
